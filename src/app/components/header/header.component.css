@@ -1,0 +1,19 @@
+.header {
+  height: 150px;
+  background-color: #1a1818;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+}
+.header p {
+  font-size:20px;
+  padding-top: 15px;
+}
+.usd-eur {
+  display: flex;
+  justify-content: space-around;
+}
+.flag {
+  width: 100px;
+  height: 50px;
+}

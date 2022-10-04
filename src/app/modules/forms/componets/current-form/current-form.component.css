@@ -1,0 +1,23 @@
+.formGroup {
+  height: 200px;
+  border: 1px solid black;
+  background-color: lightgrey;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.inputAndSelect {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+}
+.input {
+  width: 65%;
+  height: 50px;
+}
+.select {
+  width: 15%;
+  background-color: #1a1818;
+  color: white;
+  text-align: center;
+}
