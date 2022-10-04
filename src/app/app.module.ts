@@ -4,7 +4,6 @@ import {BrowserModule} from "@angular/platform-browser"
 
 import {AppComponent} from "./app.component";
 import {MainLayoutComponent} from "./layout/main-layout/main-layout.component";
-import {AppRoutingModule} from "./app-routing.module";
 import {HeaderComponent} from "./components/header/header.component";
 import {FormsModule} from "./modules/forms/forms.module";
 
@@ -18,10 +17,7 @@ import {FormsModule} from "./modules/forms/forms.module";
   imports: [
     BrowserModule,
     HttpClientModule,
-    AppRoutingModule,
     FormsModule,
-    // MatSlideToggleModule,
-    // MatIconModule
   ],
 
   providers: [],
@@ -29,6 +25,4 @@ import {FormsModule} from "./modules/forms/forms.module";
   bootstrap: [AppComponent]
 })
 
-export class AppModule {
-
-}
+export class AppModule { }
