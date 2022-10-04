@@ -1,25 +1,48 @@
-<form [formGroup]="form" class="formGroup">
+<!--<form [formGroup]="form" class="formGroup">-->
+
+<!--  <div class="inputAndSelect">-->
+
+<!--    <input type="number" formControlName="selectFromValue" value="{{convertSumaTo}}" min="0" class="input">-->
+
+<!--    <select formControlName="selectFromCode" class="select">-->
+<!--      <option *ngFor="let currency of currencies">{{currency}}</option>-->
+<!--    </select>-->
+
+<!--  </div>-->
+
+<!--  <div class="inputAndSelect">-->
+
+<!--    <input type="number" formControlName="selectToValue" value="{{convertSumaFrom}}" min="0" class="input">-->
+
+<!--    <select formControlName="selectToCode" class="select">-->
+<!--      <option *ngFor="let currency of currencies">{{currency}}</option>-->
+<!--    </select>-->
+
+<!--  </div>-->
+
+<!--</form>-->
+
+
+<form [formGroup]="form" class="formGroup" >
 
   <div class="inputAndSelect">
 
-    <input type="number" formControlName="selectFromValue" value="{{convertSumaTo}}" min="0" class="input">
+    <input type="number" formControlName="selectFromValue" class="input" (input)="subject.next('from')">
 
     <select formControlName="selectFromCode" class="select">
-      <option *ngFor="let currency of currencies">{{currency}}</option>
+      <option *ngFor="let currency of symbols">{{currency}}</option>
     </select>
 
   </div>
 
   <div class="inputAndSelect">
 
-    <input type="number" formControlName="selectToValue" value="{{convertSumaFrom}}" min="0" class="input">
+    <input type="number" formControlName="selectToValue" class="input" (input)="subject.next('to')">
 
     <select formControlName="selectToCode" class="select">
-      <option *ngFor="let currency of currencies">{{currency}}</option>
+      <option *ngFor="let currency of symbols">{{currency}}</option>
     </select>
 
   </div>
 
 </form>
-
-

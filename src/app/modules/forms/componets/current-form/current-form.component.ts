@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 
 import {ExchangeCurrencyService} from "../../services/exchange-currency.service";
 import {FormControl, FormGroup} from "@angular/forms";
+import {debounceTime, Subject} from 'rxjs';
 
 @Component({
   selector: 'app-current-form',
@@ -10,18 +11,23 @@ import {FormControl, FormGroup} from "@angular/forms";
   styleUrls: ['./current-form.component.css']
 })
 export class CurrentFormComponent implements OnInit {
+  currencies: object = {};
+  symbols: string[] = [];
+  form:any= FormGroup;
+  subject = new Subject<'to' | 'from'>()
 
-  currencies:string[] = [];
-  currency:number[] = [];
-  fromCurrency:string = '';
-  toCurrency:string = '';
-  sumaFrom: number = 0;
-  sumaTo: number = 0;
-  convertSumaFrom: number = 0;
-  convertSumaTo: number = 0;
-  form:any = FormGroup;
+  constructor(private httpClient: HttpClient, private exchangeCurrencyService: ExchangeCurrencyService) {
+    this.subject.pipe(
+      debounceTime(300)
+    ).subscribe((value) => {
 
-  constructor(private httpClient: HttpClient, private exchangeCurrencyService: ExchangeCurrencyService) { }
+      if (value === 'from') {
+        return this.convertFromTo()
+      }
+
+      return this.convertToFrom()
+    })
+  }
 
   ngOnInit(): void {
     this.getALLCurrencies();
@@ -30,7 +36,8 @@ export class CurrentFormComponent implements OnInit {
 
   getALLCurrencies() {
     this.exchangeCurrencyService.getALLCurrencies().subscribe(value => {
-      this.currencies = [...Object.keys(value.rates)]
+      this.symbols = [...Object.keys(value.rates)]
+      this.currencies = value.rates
     });
   }
 
@@ -43,41 +50,18 @@ export class CurrentFormComponent implements OnInit {
     })
   }
 
-  ngAfterViewInit(): void {
-    this.form.get('selectFromValue')?.valueChanges.subscribe((value: number) => {
-      this.sumaFrom = value;
-      this.exchangerCurrency();
+  convertFromTo(): void {
+    const {selectFromCode, selectToCode, selectFromValue} = this.form.value;
+    this.exchangeCurrencyService.getCurrency(selectFromCode, selectToCode).subscribe(value => {
+      this.form.get('selectToValue')?.setValue(selectFromValue * value.rates[selectToCode])
     })
 
-    this.form.get('selectToValue')?.valueChanges.subscribe((value: number) => {
-      this.sumaTo = value;
-      this.exchangerCurrency();
-    })
-
-    this.form.get('selectFromCode')?.valueChanges.subscribe((value: string) =>{
-      this.fromCurrency = value;
-    })
-
-    this.form.get('selectToCode')?.valueChanges.subscribe((value: string) =>{
-      this.toCurrency = value;
-      this.exchangeMyCurrency();
-    })
   }
 
-  exchangerCurrency(){
-    if (this.sumaFrom){
-      this.convertSumaFrom = this.sumaFrom * this.currency[0]
-      this.form.setValue({selectFromValue: this.convertSumaFrom});
-    }else if (this.sumaTo) {
-      this.convertSumaTo = this.sumaTo / this.currency[0]
-      this.form.setValue({selectToValue: this.convertSumaTo});
-    }
-  }
-
-  exchangeMyCurrency(){
-    this.exchangeCurrencyService.getCurrency(this.fromCurrency,this.toCurrency).subscribe(value => {
-      this.currency = Object.values(value.rates);
+  convertToFrom(): void {
+    const {selectFromCode, selectToCode, selectToValue} = this.form.value;
+    this.exchangeCurrencyService.getCurrency(selectFromCode, selectToCode).subscribe(value => {
+      this.form.get('selectFromValue')?.setValue(selectToValue / value.rates[selectToCode])
     })
   }
-
 }
